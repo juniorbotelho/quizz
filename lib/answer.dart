@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 
 class Answer extends StatelessWidget {
-  final List<String> text;
+  final List<Map<String, Object>> text;
   final void Function({int num}) onSelect;
   final List<int> index;
 
-  Answer({this.text, this.onSelect, this.index});
+  Answer({
+    @required this.index,
+    @required this.text,
+    @required this.onSelect,
+  });
 
   Widget build(BuildContext context) {
     return Column(
@@ -16,8 +20,9 @@ class Answer extends StatelessWidget {
           child: RaisedButton(
             color: Colors.redAccent,
             textColor: Colors.white,
-            child: Text(this.text.elementAt(index)),
-            onPressed: () => this.onSelect(num: index),
+            child: Text(this.text.elementAt(index)['text']),
+            onPressed: () =>
+                this.onSelect(num: this.text.elementAt(index)['score']),
           ),
         );
       }).toList(),

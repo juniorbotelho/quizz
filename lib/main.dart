@@ -1,47 +1,53 @@
 import 'package:flutter/material.dart';
-import 'package:quizz/answer.dart';
-import 'package:quizz/question.dart';
+import 'package:quizz/quiz.dart';
 
 main() => runApp(QuizzApp());
 
 class _QuizzAppState extends State<QuizzApp> {
-  int indexed = 0;
+  int _indexed = 0;
+  int _score = 0;
   final List<Map<String, Object>> questions = const [
     {
       'text': 'Which is your favorite color?',
-      'answer': ['black', 'red', 'green', 'white']
+      'answer': [
+        {'text': 'black', 'score': 10},
+        {'text': 'red', 'score': 5},
+        {'text': 'green', 'score': 3},
+        {'text': 'white', 'score': 1}
+      ]
     },
     {
       'text': 'Which is your favorite animal?',
-      'answer': ['rabbit', 'snake', 'elephant', 'lion']
+      'answer': [
+        {'text': 'rabbit', 'score': 10},
+        {'text': 'snake', 'score': 5},
+        {'text': 'elephant', 'score': 3},
+        {'text': 'lion', 'score': 1},
+      ]
     },
     {
       'text': 'Which is your favorite instructor?',
-      'answer': ['maria', 'joão', 'leo', 'pedro']
+      'answer': [
+        {'text': 'leo', 'score': 10},
+        {'text': 'maria', 'score': 5},
+        {'text': 'joão', 'score': 3},
+        {'text': 'pedro', 'score': 1},
+      ]
     }
   ];
 
-  bool hasQuestions() {
-    return this.indexed < this.questions.length ? true : false;
+  void onResponse({int num = 0}) {
+    setState(() {
+      this._indexed++;
+      this._score += num;
+    });
   }
 
-  void questionResponse({int num = 0}) {
-    setState(() => this.indexed++);
-  }
-
-  Widget screenResponse() {
-    return this.hasQuestions()
-        ? Column(
-            children: <Widget>[
-              Question(text: this.questions.elementAt(this.indexed)['text']),
-              Answer(
-                text: this.questions.elementAt(this.indexed)['answer'],
-                index: [0, 1, 2, 3],
-                onSelect: this.questionResponse,
-              )
-            ],
-          )
-        : null;
+  void onRefresh() {
+    setState(() {
+      this._indexed = 0;
+      this._score = 0;
+    });
   }
 
   @override
@@ -52,7 +58,24 @@ class _QuizzAppState extends State<QuizzApp> {
           title: Text('Quizz'),
           backgroundColor: Colors.redAccent,
         ),
-        body: this.screenResponse(),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Quiz(
+              indexed: this._indexed,
+              score: this._score,
+              questions: this.questions,
+              onSelect: this.onResponse,
+            ),
+          ],
+        ),
+        drawer: Drawer(),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.refresh),
+          backgroundColor: Colors.redAccent,
+          onPressed: this.onRefresh,
+        ),
       ),
     );
   }
