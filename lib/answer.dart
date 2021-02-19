@@ -12,7 +12,7 @@ class Answer extends StatelessWidget {
       children: this.index.map((index) {
         return Container(
           width: double.infinity,
-          margin: const EdgeInsets.fromLTRB(20.0, 0, 20.0, 0),
+          margin: const EdgeInsets.fromLTRB(30.0, 0, 30.0, 0),
           child: RaisedButton(
             color: Colors.redAccent,
             textColor: Colors.white,

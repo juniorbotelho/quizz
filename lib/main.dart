@@ -6,38 +6,53 @@ main() => runApp(QuizzApp());
 
 class _QuizzAppState extends State<QuizzApp> {
   int indexed = 0;
+  final List<Map<String, Object>> questions = const [
+    {
+      'text': 'Which is your favorite color?',
+      'answer': ['black', 'red', 'green', 'white']
+    },
+    {
+      'text': 'Which is your favorite animal?',
+      'answer': ['rabbit', 'snake', 'elephant', 'lion']
+    },
+    {
+      'text': 'Which is your favorite instructor?',
+      'answer': ['maria', 'joão', 'leo', 'pedro']
+    }
+  ];
 
-  void handleQuestionResponse({int num = 0}) {
-    setState(() => indexed = num);
+  bool hasQuestions() {
+    return this.indexed < this.questions.length ? true : false;
+  }
+
+  void questionResponse({int num = 0}) {
+    setState(() => this.indexed++);
+  }
+
+  Widget screenResponse() {
+    return this.hasQuestions()
+        ? Column(
+            children: <Widget>[
+              Question(text: this.questions.elementAt(this.indexed)['text']),
+              Answer(
+                text: this.questions.elementAt(this.indexed)['answer'],
+                index: [0, 1, 2, 3],
+                onSelect: this.questionResponse,
+              )
+            ],
+          )
+        : null;
   }
 
   @override
   Widget build(BuildContext context) {
-    final List<String> questions = [];
-
-    // Questions
-    questions.add('Which is your favorite color?');
-    questions.add('Which is your favorite animal?');
-    questions.add('Which is your favorite memorie?');
-
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
           title: Text('Quizz'),
           backgroundColor: Colors.redAccent,
         ),
-        body: Column(
-          children: <Widget>[
-            Question(
-              text: questions.elementAt(this.indexed),
-            ),
-            Answer(
-              onSelect: this.handleQuestionResponse,
-              text: ['Response 1', 'Response 2', 'Response 3'],
-              index: [0, 1, 2],
-            )
-          ],
-        ),
+        body: this.screenResponse(),
       ),
     );
   }
